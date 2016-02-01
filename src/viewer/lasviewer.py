@@ -45,8 +45,8 @@ class lasview():
                 else:
                     self.points = np.concatenate((self.points,inFile.points),axis=0)
                 inFile.close()
-            #out.close()
-            self.points
+            self.out = laspy.file.File("./output.las",mode= "w",header=self.header, vlrs = self.vlrs)
+            self.out.points = self.points
         except Exception, error:
             print("Error while reading file:")
             print(error)
