@@ -35,16 +35,18 @@ class lasview():
         self.dim = self.args.dimension
         try:
             self.inFile = self.args.in_file
+            out = laspy.file.File("./output.las",mode= "w")
             for i in range(len(self.inFile)):
-                inFile = laspy.file.File(self.args.in_file[i], mode = "r")
-                points = np.arange(0)
+                inFile = laspy.file.File(self.inFile[i], mode = "r")
                 if i == 0:
                     new_header = copy(inFile.header)
-                    self.out = laspy.file.File("./output.las",mode= "w",vlrs = inFile.header.vlrs,header = new_header)
-                    points = inFile.points
+                    new_points = copy(inFile.points)
+                    out.header = new_header
+                    out.points = new_points
                 else:
-                    points = self.out.points
-                self.out.points = np.concatenate((points,inFile.points))
+                    points = out.points
+                    out.points = np.concatenate((points,inFile.points))
+                inFile.close()
             self.out.close()
         except Exception, error:
             print("Error while reading file:")
