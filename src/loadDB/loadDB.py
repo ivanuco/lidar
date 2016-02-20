@@ -1,0 +1,105 @@
+#!/usr/bin/env python
+'''
+Created on 20 de feb. de 2016
+
+@author: ivanuco
+'''
+
+import argparse
+import laspy
+from copy import copy
+from pymongo import MongoClient
+try:
+    import simplejson as json
+except ImportError:
+    try:
+        import json
+    except ImportError:
+        raise ImportError
+import datetime
+from bson.objectid import ObjectId
+from werkzeug import Response
+
+# From: https://gist.github.com/akhenakh/2954605
+class MongoJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date)):
+            return obj.isoformat()
+        elif isinstance(obj, ObjectId):
+            return unicode(obj)
+        return json.JSONEncoder.default(self, obj)
+
+def jsonify(*args, **kwargs):
+    return Response(
+        json.dumps(
+            dict(*args, **kwargs),
+            cls=MongoJsonEncoder
+        ),
+        mimetype='application/json'
+    )
+
+class loadDB():
+    def __init__(self):
+        self.parse_args()
+        self.setup()
+
+    def parse_args(self):
+        parser =argparse.ArgumentParser(description = """Load a file in read mode and
+                                        charge at DataBase.""")
+        parser.add_argument("in_file", metavar = "in_file", 
+                            type=str,nargs="+",help = "LAS file to plot")
+        parser.add_argument("--mode",metavar="viewer_mode", type=str,default="default", 
+                help = "Color Mode. Values to specify with a dimension: greyscale, heatmap.  Values which include a dimension: elevation, intensity, rgb")
+        parser.add_argument("--dimension", metavar = "dim", type=str, default="intensity",
+                help = "Color Dimension. Can be any single LAS dimension, default is intensity. Using color mode rgb, elevation, and intensity overrides this field.")
+
+        self.args = parser.parse_args()
+     
+    def setup(self):
+    # Check mode
+        for f in self.args.in_file:
+            print("Reading: " + f)
+        self.mode = self.args.mode
+        self.dim = self.args.dimension
+        try:
+            client = MongoClient("0.0.0.0", 27017)
+            db = client.lidar
+            collection = db.zona            
+            self.inFile = self.args.in_file
+            for i in range(len(self.inFile)):
+                inFile = laspy.file.File(self.inFile[i], mode = "r")
+                self.header=copy(inFile.header)
+                self.vlrs = inFile.header.vlrs
+                for p in range(len(inFile.points)): 
+                    item = {
+                        "X":inFile.X[p],
+                        "Y":inFile.Y[p],
+                        "Z":inFile.Z[p],
+                        "intensity":inFile.intensity[p],
+                        "flag_byte":inFile.flag_byte[p],
+                        "raw_classification":inFile.raw_classification[p],
+                        "scan_angle_rank":inFile.scan_angle_rank[p],
+                        "user_data":inFile.user_data[p],
+                        "pt_src_id":inFile.pt_src_id[p],
+                        "gps_time":inFile.gps_time[p],
+                        "red":inFile.red[p],
+                        "green":inFile.green[p],
+                        "blue":inFile.blue[p]
+                       }
+                    objectid = collection.insert(jsonify(item))
+                    print(str(objectid))
+                inFile.close()                   
+        except Exception, error:
+            print("Error while reading file:")
+            print(error)
+            quit()
+        
+    def view(self):
+        self.out.visualize(self.mode, self.dim)
+
+def main():
+    expl = loadDB()
+    #expl.view()
+
+if __name__ == '__main__':
+    main()
