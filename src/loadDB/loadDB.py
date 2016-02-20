@@ -59,7 +59,7 @@ class loadDB():
                             'blue': int(inFile.blue[p])
                             }
                     collection.insert_one(punto)
-                    print(punto)
+                    #print(punto)
                 inFile.close()                   
         except Exception, error:
             print("Error while reading file:")
