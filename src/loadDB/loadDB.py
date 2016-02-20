@@ -9,34 +9,7 @@ import argparse
 import laspy
 from copy import copy
 from pymongo import MongoClient
-try:
-    import simplejson as json
-except ImportError:
-    try:
-        import json
-    except ImportError:
-        raise ImportError
-import datetime
-from bson.objectid import ObjectId
-from werkzeug import Response
-
-# From: https://gist.github.com/akhenakh/2954605
-class MongoJsonEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, (datetime.datetime, datetime.date)):
-            return obj.isoformat()
-        elif isinstance(obj, ObjectId):
-            return unicode(obj)
-        return json.JSONEncoder.default(self, obj)
-
-def jsonify(*args, **kwargs):
-    return Response(
-        json.dumps(
-            dict(*args, **kwargs),
-            cls=MongoJsonEncoder
-        ),
-        mimetype='application/json'
-    )
+import bson
 
 class loadDB():
     def __init__(self):
@@ -57,8 +30,6 @@ class loadDB():
      
     def setup(self):
     # Check mode
-        for f in self.args.in_file:
-            print("Reading: " + f)
         self.mode = self.args.mode
         self.dim = self.args.dimension
         try:
@@ -68,26 +39,27 @@ class loadDB():
             self.inFile = self.args.in_file
             for i in range(len(self.inFile)):
                 inFile = laspy.file.File(self.inFile[i], mode = "r")
+                print("Reading: " + inFile.filename)
                 self.header=copy(inFile.header)
                 self.vlrs = inFile.header.vlrs
                 for p in range(len(inFile.points)): 
-                    item = {
-                        "X":inFile.X[p],
-                        "Y":inFile.Y[p],
-                        "Z":inFile.Z[p],
-                        "intensity":inFile.intensity[p],
-                        "flag_byte":inFile.flag_byte[p],
-                        "raw_classification":inFile.raw_classification[p],
-                        "scan_angle_rank":inFile.scan_angle_rank[p],
-                        "user_data":inFile.user_data[p],
-                        "pt_src_id":inFile.pt_src_id[p],
-                        "gps_time":inFile.gps_time[p],
-                        "red":inFile.red[p],
-                        "green":inFile.green[p],
-                        "blue":inFile.blue[p]
-                       }
-                    objectid = collection.insert(jsonify(item))
-                    print(str(objectid))
+                    punto = {
+                            'X': bson.Int64(inFile.X[p]),
+                            'Y': bson.Int64(inFile.Y[p]),
+                            'Z': bson.Int64(inFile.Z[p]),
+                            'intensity': int(inFile.intensity[p]),
+                            'flag_byte': int(inFile.flag_byte[p]),
+                            'raw_classification': int(inFile.raw_classification[p]),
+                            'scan_angle_rank': int(inFile.scan_angle_rank[p]),
+                            'user_data':str(inFile.user_data[p]),
+                            'pt_src': str(inFile.pt_src_id[p]),
+                            'gps_time': inFile.gps_time[p],
+                            'red': int(inFile.red[p]),
+                            'green': int(inFile.green[p]),
+                            'blue': int(inFile.blue[p])
+                            }
+                    collection.insert_one(punto)
+                    print(punto)
                 inFile.close()                   
         except Exception, error:
             print("Error while reading file:")
