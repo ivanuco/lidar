@@ -44,22 +44,35 @@ class loadDB():
                 self.vlrs = inFile.header.vlrs
                 for p in range(len(inFile.points)): 
                     punto = {
-                            'X': bson.Int64(inFile.X[p]),
-                            'Y': bson.Int64(inFile.Y[p]),
-                            'Z': bson.Int64(inFile.Z[p]),
-                            'intensity': int(inFile.intensity[p]),
-                            'flag_byte': int(inFile.flag_byte[p]),
-                            'raw_classification': int(inFile.raw_classification[p]),
-                            'scan_angle_rank': int(inFile.scan_angle_rank[p]),
-                            'user_data':str(inFile.user_data[p]),
-                            'pt_src': str(inFile.pt_src_id[p]),
+                            'X': inFile.X[p].tolist(),
+                            'Y': inFile.Y[p].tolist(),
+                            'Z': inFile.Z[p].tolist(),
+                            'x': inFile.x[p].tolist(),
+                            'y': inFile.y[p].tolist(),
+                            'z': inFile.z[p].tolist(),
+                            'intensity': inFile.intensity[p].tolist(),
+                            'flag_byte': {
+                                          'return_num': inFile.return_num[p].tolist(),
+                                          'num_returns': inFile.num_returns[p].tolist(),
+                                          'scan_dir_flag': bool(inFile.scan_dir_flag[p]),
+                                          'edge_flight_line': bool(inFile.edge_flight_line[p])
+                                          },
+                            'raw_classification': {
+                                                   'classification': inFile.classification[p].tolist(),
+                                                   'synthetic': bool(inFile.synthetic[p]),
+                                                   'key_point': bool(inFile.key_point[p]),
+                                                   'withheld': bool(inFile.withheld[p])
+                                                   },
+                            'scan_angle_rank': inFile.scan_angle_rank[p].tolist(),
+                            'user_data': inFile.user_data[p].tolist(),
+                            'pt_src': inFile.pt_src_id[p].tolist(),
                             'gps_time': inFile.gps_time[p],
-                            'red': int(inFile.red[p]),
-                            'green': int(inFile.green[p]),
-                            'blue': int(inFile.blue[p])
+                            'red': inFile.red[p].tolist(),
+                            'green': inFile.green[p].tolist(),
+                            'blue': inFile.blue[p].tolist()
                             }
                     collection.insert_one(punto)
-                    #print(punto)
+                    print(punto)
                 inFile.close()                   
         except Exception, error:
             print("Error while reading file:")
