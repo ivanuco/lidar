@@ -63,7 +63,7 @@ class loadDB():
                 inFile = laspy.file.File(self.inFile[i], mode="r")
                 print("Reading: " + inFile.filename)                
                 longitud = len(inFile.points)                
-                printProgress(0, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
+                printProgress(0, longitud-1, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
                 self.header = copy(inFile.header)
                 self.vlrs = inFile.header.vlrs
                 X = inFile.X
@@ -122,11 +122,11 @@ class loadDB():
                     documents.append(punto)
                     if len(documents) > 999 :
                         collection.insert_many(documents)
-                        printProgress(p, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
+                        printProgress(p, longitud-1, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
                         documents = []                    
                 if len(documents) > 0 :
                     collection.insert_many(documents)
-                    printProgress(p, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
+                    printProgress(p, longitud-1, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
                     documents = []
             final = datetime.datetime.now()
             total = final - inicio
