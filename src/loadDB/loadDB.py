@@ -42,42 +42,67 @@ class loadDB():
                 inFile = laspy.file.File(self.inFile[i], mode = "r")
                 print("Reading: " + inFile.filename)
                 inicio = datetime.datetime.now()
+                longitud = len(inFile.points)
                 print ("Inicio de carga de datos = %s" % inicio)
                 self.header=copy(inFile.header)
                 self.vlrs = inFile.header.vlrs
-                for p in range(len(inFile.points)): 
+                X = inFile.X
+                Y = inFile.Y
+                Z = inFile.Z
+                x = inFile.x
+                y = inFile.y
+                z = inFile.z
+                intensity = inFile.intensity
+                return_num = inFile.return_num
+                num_returns = inFile.num_returns
+                scan_dir_flag = inFile.scan_dir_flag
+                edge_flight_line = inFile.edge_flight_line
+                classification = inFile.classification
+                synthetic = inFile.synthetic
+                key_point = inFile.key_point
+                withheld = inFile.withheld
+                scan_angle_rank = inFile.scan_angle_rank
+                user_data = inFile.user_data
+                pt_src = inFile.pt_src_id
+                gps_time = inFile.gps_time
+                red = inFile.red
+                green = inFile.green
+                blue = inFile.blue
+                for p in range(longitud): 
                     punto = {
-                            'X': inFile.X[p].tolist(),
-                            'Y': inFile.Y[p].tolist(),
-                            'Z': inFile.Z[p].tolist(),
-                            'x': inFile.x[p].tolist(),
-                            'y': inFile.y[p].tolist(),
-                            'z': inFile.z[p].tolist(),
-                            'intensity': inFile.intensity[p].tolist(),
+                            'X': X[p].tolist(),
+                            'Y': Y[p].tolist(),
+                            'Z': Z[p].tolist(),
+                            'x': x[p].tolist(),
+                            'y': y[p].tolist(),
+                            'z': z[p].tolist(),
+                            'intensity': intensity[p].tolist(),
                             'flag_byte': {
-                                          'return_num': inFile.return_num[p].tolist(),
-                                          'num_returns': inFile.num_returns[p].tolist(),
-                                          'scan_dir_flag': bool(inFile.scan_dir_flag[p]),
-                                          'edge_flight_line': bool(inFile.edge_flight_line[p])
+                                          'return_num': return_num[p].tolist(),
+                                          'num_returns': num_returns[p].tolist(),
+                                          'scan_dir_flag': bool(scan_dir_flag[p]),
+                                          'edge_flight_line': bool(edge_flight_line[p])
                                           },
                             'raw_classification': {
-                                                   'classification': inFile.classification[p].tolist(),
-                                                   'synthetic': bool(inFile.synthetic[p]),
-                                                   'key_point': bool(inFile.key_point[p]),
-                                                   'withheld': bool(inFile.withheld[p])
+                                                   'classification': classification[p].tolist(),
+                                                   'synthetic': bool(synthetic[p]),
+                                                   'key_point': bool(key_point[p]),
+                                                   'withheld': bool(withheld[p])
                                                    },
-                            'scan_angle_rank': inFile.scan_angle_rank[p].tolist(),
-                            'user_data': inFile.user_data[p].tolist(),
-                            'pt_src': inFile.pt_src_id[p].tolist(),
-                            'gps_time': inFile.gps_time[p],
-                            'red': inFile.red[p].tolist(),
-                            'green': inFile.green[p].tolist(),
-                            'blue': inFile.blue[p].tolist()
+                            'scan_angle_rank': scan_angle_rank[p].tolist(),
+                            'user_data': user_data[p].tolist(),
+                            'pt_src': pt_src[p].tolist(),
+                            'gps_time': gps_time[p],
+                            'red': red[p].tolist(),
+                            'green': green[p].tolist(),
+                            'blue': blue[p].tolist()
                             }
                     collection.insert_one(punto)
-                    # print(punto)
+                    print(p,longitud,punto)
                 final = datetime.datetime.now()
+                total = final - inicio
                 print ("Final de carga de datos = %s" % final)
+                print ("Tiempo empleado = %s" % total)
                 inFile.close()                   
         except Exception, error:
             print("Error while reading file:")
