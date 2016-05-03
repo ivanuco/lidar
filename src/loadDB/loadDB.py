@@ -100,9 +100,12 @@ class loadDB():
                             'blue': blue[p].tolist()
                             }
                     documents.append(punto)
-                    #collection.insert_one(punto)
-                    print(p,longitud,punto)
-                collection.insert_many(documents)
+                    if len(documents) > 999 :
+                        collection.insert_many(documents)
+                        documents = []                    
+                if len(documents)>0 :
+                    collection.insert_many(documents)
+                    documents = []
                 final = datetime.datetime.now()
                 total = final - inicio
                 print ("Final de carga de datos = %s" % final)
