@@ -10,6 +10,25 @@ import laspy
 from copy import copy
 from pymongo import MongoClient
 import datetime
+import sys as Sys
+
+# Print iterations progress
+def printProgress (iteration, total, prefix='', suffix='', decimals=2, barLength=100):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+    """
+    filledLength = int(round(barLength * iteration / float(total)))
+    percents = round(100.00 * (iteration / float(total)), decimals)
+    bar = '#' * filledLength + '-' * (barLength - filledLength)
+    Sys.stdout.write('%s [%s] %s%s %s\r' % (prefix, bar, percents, '%', suffix)),
+    Sys.stdout.flush()
+    if iteration == total:
+        print("\n")
 
 
 class loadDB():
@@ -18,14 +37,14 @@ class loadDB():
         self.setup()
 
     def parse_args(self):
-        parser =argparse.ArgumentParser(description = """Load a file in read mode and
+        parser = argparse.ArgumentParser(description="""Load a file in read mode and
                                         charge at DataBase.""")
-        parser.add_argument("in_file", metavar = "in_file", 
-                            type=str,nargs="+",help = "LAS file to plot")
-        parser.add_argument("--mode",metavar="viewer_mode", type=str,default="default", 
-                help = "Color Mode. Values to specify with a dimension: greyscale, heatmap.  Values which include a dimension: elevation, intensity, rgb")
-        parser.add_argument("--dimension", metavar = "dim", type=str, default="intensity",
-                help = "Color Dimension. Can be any single LAS dimension, default is intensity. Using color mode rgb, elevation, and intensity overrides this field.")
+        parser.add_argument("in_file", metavar="in_file",
+                            type=str, nargs="+", help="LAS file to plot")
+        parser.add_argument("--mode", metavar="viewer_mode", type=str, default="default",
+                help="Color Mode. Values to specify with a dimension: greyscale, heatmap.  Values which include a dimension: elevation, intensity, rgb")
+        parser.add_argument("--dimension", metavar="dim", type=str, default="intensity",
+                help="Color Dimension. Can be any single LAS dimension, default is intensity. Using color mode rgb, elevation, and intensity overrides this field.")
 
         self.args = parser.parse_args()
      
@@ -39,12 +58,13 @@ class loadDB():
             collection = db.zona            
             self.inFile = self.args.in_file
             for i in range(len(self.inFile)):
-                inFile = laspy.file.File(self.inFile[i], mode = "r")
+                inFile = laspy.file.File(self.inFile[i], mode="r")
                 print("Reading: " + inFile.filename)
                 inicio = datetime.datetime.now()
                 longitud = len(inFile.points)
                 print ("Inicio de carga de datos = %s" % inicio)
-                self.header=copy(inFile.header)
+                printProgress(0, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
+                self.header = copy(inFile.header)
                 self.vlrs = inFile.header.vlrs
                 X = inFile.X
                 Y = inFile.Y
@@ -102,9 +122,11 @@ class loadDB():
                     documents.append(punto)
                     if len(documents) > 999 :
                         collection.insert_many(documents)
+                        printProgress(p, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
                         documents = []                    
-                if len(documents)>0 :
+                if len(documents) > 0 :
                     collection.insert_many(documents)
+                    printProgress(p, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
                     documents = []
                 final = datetime.datetime.now()
                 total = final - inicio
@@ -120,7 +142,7 @@ class loadDB():
 
 def main():
     expl = loadDB()
-    #expl.view()
+    # expl.view()
 
 if __name__ == '__main__':
     main()
