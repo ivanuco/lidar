@@ -9,7 +9,8 @@ import argparse
 import laspy
 from copy import copy
 from pymongo import MongoClient
-import bson
+import datetime
+
 
 class loadDB():
     def __init__(self):
@@ -40,6 +41,8 @@ class loadDB():
             for i in range(len(self.inFile)):
                 inFile = laspy.file.File(self.inFile[i], mode = "r")
                 print("Reading: " + inFile.filename)
+                inicio = datetime.datetime.now()
+                print ("Inicio de carga de datos = %s" % inicio)
                 self.header=copy(inFile.header)
                 self.vlrs = inFile.header.vlrs
                 for p in range(len(inFile.points)): 
@@ -72,7 +75,9 @@ class loadDB():
                             'blue': inFile.blue[p].tolist()
                             }
                     collection.insert_one(punto)
-                    print(punto)
+                    # print(punto)
+                final = datetime.datetime.now()
+                print ("Final de carga de datos = %s" % final)
                 inFile.close()                   
         except Exception, error:
             print("Error while reading file:")
