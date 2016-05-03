@@ -69,6 +69,7 @@ class loadDB():
                 green = inFile.green
                 blue = inFile.blue
                 inFile.close()
+                documents = []
                 for p in range(longitud): 
                     punto = {
                             'X': X[p].tolist(),
@@ -98,8 +99,10 @@ class loadDB():
                             'green': green[p].tolist(),
                             'blue': blue[p].tolist()
                             }
-                    collection.insert_one(punto)
+                    documents.append(punto)
+                    #collection.insert_one(punto)
                     print(p,longitud,punto)
+                collection.insert_many(documents)
                 final = datetime.datetime.now()
                 total = final - inicio
                 print ("Final de carga de datos = %s" % final)
