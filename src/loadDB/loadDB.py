@@ -57,12 +57,12 @@ class loadDB():
             db = client.lidar
             collection = db.zona            
             self.inFile = self.args.in_file
+            inicio = datetime.datetime.now()
+            print ("Inicio de carga de datos = %s" % inicio)
             for i in range(len(self.inFile)):
                 inFile = laspy.file.File(self.inFile[i], mode="r")
-                print("Reading: " + inFile.filename)
-                inicio = datetime.datetime.now()
-                longitud = len(inFile.points)
-                print ("Inicio de carga de datos = %s" % inicio)
+                print("Reading: " + inFile.filename)                
+                longitud = len(inFile.points)                
                 printProgress(0, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
                 self.header = copy(inFile.header)
                 self.vlrs = inFile.header.vlrs
@@ -128,10 +128,10 @@ class loadDB():
                     collection.insert_many(documents)
                     printProgress(p, longitud, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
                     documents = []
-                final = datetime.datetime.now()
-                total = final - inicio
-                print ("Final de carga de datos = %s" % final)
-                print ("Tiempo empleado = %s" % total)                   
+            final = datetime.datetime.now()
+            total = final - inicio
+            print ("Final de carga de datos = %s" % final)
+            print ("Tiempo empleado = %s" % total)                   
         except Exception, error:
             print("Error while reading file:")
             print(error)
