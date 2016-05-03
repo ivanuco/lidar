@@ -68,6 +68,7 @@ class loadDB():
                 red = inFile.red
                 green = inFile.green
                 blue = inFile.blue
+                inFile.close()
                 for p in range(longitud): 
                     punto = {
                             'X': X[p].tolist(),
@@ -102,8 +103,7 @@ class loadDB():
                 final = datetime.datetime.now()
                 total = final - inicio
                 print ("Final de carga de datos = %s" % final)
-                print ("Tiempo empleado = %s" % total)
-                inFile.close()                   
+                print ("Tiempo empleado = %s" % total)                   
         except Exception, error:
             print("Error while reading file:")
             print(error)
