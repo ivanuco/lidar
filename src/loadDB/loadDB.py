@@ -53,7 +53,7 @@ class loadDB():
         self.mode = self.args.mode
         self.dim = self.args.dimension
         try:
-            client = MongoClient("0.0.0.0", 27017)
+            client = MongoClient("localhost", 27017)
             db = client.lidar
             collection = db.zona            
             self.inFile = self.args.in_file
