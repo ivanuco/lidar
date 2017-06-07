@@ -233,7 +233,7 @@ class pcl_image():
         glu.gluLookAt(self.location[0], self.location[1], self.location[2],
                       self.focus[0], self.focus[1], self.focus[2] ,
                       self.up[0], self.up[1], self.up[2])
-        self.draw_points(self)
+        self.draw_points(self.N)
         glut.glutSwapBuffers()
 
     def camera_reset(self):
