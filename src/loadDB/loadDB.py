@@ -6,11 +6,14 @@ Created on 20 de feb. de 2016
 '''
 
 import argparse
-import laspy
 from copy import copy
-from pymongo import MongoClient
 import datetime
+
+import laspy
+from pymongo import MongoClient
+
 import sys as Sys
+
 
 # Print iterations progress
 def printProgress (iteration, total, prefix='', suffix='', decimals=2, barLength=100):
