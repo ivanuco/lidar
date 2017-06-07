@@ -1,23 +1,21 @@
-import laspy
-import numpy as np
 import random
 import sys
 
-# OpenGL library doesn't support absolute import for gl, glu, glut, or arrays
+from OpenGL.arrays import vbo
+from OpenGL.raw.WGL._types import CHAR
+import laspy
+
 import OpenGL.GL as gl 
 import OpenGL.GLU as glu 
 import OpenGL.GLUT as glut 
-from OpenGL.arrays import vbo
+import numpy as np
 
 
-
+# OpenGL library doesn't support absolute import for gl, glu, glut, or arrays
 # Skip debugging for speedup
 #OpenGL.ERROR_CHECKING = False
-
 # Skip logging for speedup 
 #OpenGL.ERROR_LOGGING = False
-
-
 def run_glviewer(file_object, mode, dim):
     glviewer = pcl_image(file_object, mode, dim)
     return(0)
@@ -79,9 +77,9 @@ class VBO_Provider():
     def set_color_mode(self, mode, dim,start_idx, end_idx, data): 
         if (mode == "default"):
             if (all([x in self.file_object.point_format.lookup for x in ("red", "green", "blue")])):
-                if ((all(self.file_object.red[0:len(self.file_object):(len(self.file_object)/1000)] == 0)) and
-                    (all(self.file_object.green[0:len(self.file_object):(len(self.file_object)/1000)] == 0)) and
-                    (all(self.file_object.blue[0:len(self.file_object):(len(self.file_object)/1000)] == 0))):
+                if ((all(self.file_object.red[0:int(len(self.file_object)):int(len(self.file_object)/1000)] == 0)) and
+                    (all(self.file_object.green[0:int(len(self.file_object)):int(len(self.file_object)/1000)] == 0)) and
+                    (all(self.file_object.blue[0:int(len(self.file_object)):int(len(self.file_object)/1000)] == 0))):
                     print("Warning: Color data appears empty, using intensity mode. Specify -mode=rgb to override")
                     mode = "intensity"
                 else:
@@ -154,7 +152,7 @@ class pcl_image():
         glut.glutInitDisplayMode(glut.GLUT_RGB | glut.GLUT_DOUBLE | glut.GLUT_DEPTH)
         glut.glutInitWindowSize(500,500)
         glut.glutInitWindowPosition(10,10)
-        glut.glutCreateWindow("Laspy+OpenGL Pointcloud")
+        glut.glutCreateWindow(b"Laspy+OpenGL Pointcloud")
         glut.glutDisplayFunc(self.display)
         glut.glutReshapeFunc(self.reshape)
         glut.glutMouseFunc(self.mouse)

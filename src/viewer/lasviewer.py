@@ -6,9 +6,12 @@ Created on 27/01/2016
 '''
 
 import argparse
-import laspy
-import numpy as np
 from copy import copy
+
+import laspy
+
+import numpy as np
+
 
 class lasview():
     def __init__(self):
