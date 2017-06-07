@@ -35,7 +35,7 @@ class VBO_Provider():
             i += 1
             try:
                 end_idx = min(len(file_object), start_idx + vbsize) 
-                print(("Buffering points " + str(start_idx) + " to " + str((end_idx))))
+                print("Buffering points " + str(start_idx) + " to " + str((end_idx)))
                 dat = self.slice_file(start_idx, end_idx, means, scaled)
                 self.set_color_mode(mode,dim, start_idx, end_idx, dat)
                 _vbo = vbo.VBO(data = np.array(dat, dtype = np.float32),
@@ -186,7 +186,7 @@ class pcl_image():
  
 
     def reshape(self, w, h):
-        print(("Reshape " + str(w) + ", " + str(h)))
+        print("Reshape " + str(w) + ", " + str(h))
         ratio = w if h == 0 else float(w)/h
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glLoadIdentity()
