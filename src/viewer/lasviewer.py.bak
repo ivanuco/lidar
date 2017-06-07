@@ -30,7 +30,7 @@ class lasview():
     def setup(self):
     # Check mode
         for f in self.args.in_file:
-            print(("Reading: " + f))
+            print("Reading: " + f)
         self.mode = self.args.mode
         self.dim = self.args.dimension
         try:
@@ -47,7 +47,7 @@ class lasview():
                 inFile.close()
             self.out = laspy.file.File("./output.las",mode= "w",header=self.header, vlrs = self.vlrs)
             self.out.points = self.points
-        except Exception as error:
+        except Exception, error:
             print("Error while reading file:")
             print(error)
             quit()
