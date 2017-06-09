@@ -39,21 +39,18 @@ class loadDB():
     def parse_args(self):
         parser = argparse.ArgumentParser(description="""Load a file in read mode and
                                         charge at DataBase.""")
+        parser.add_argument("--ip", metavar="mongo_server_ip", type=str, default="localhost", help="IP of the MongoDB server to connect. If not informed 'localhost' is used as default.")
+        parser.add_argument("--port", metavar="mongo_server_port", type=int, default=27017, help="Port of the MongoDB server to connect. If not informed '27017' is used as default.")
         parser.add_argument("in_file", metavar="in_file",
                             type=str, nargs="+", help="LAS file to plot")
-        parser.add_argument("--mode", metavar="viewer_mode", type=str, default="default",
-                help="Color Mode. Values to specify with a dimension: greyscale, heatmap.  Values which include a dimension: elevation, intensity, rgb")
-        parser.add_argument("--dimension", metavar="dim", type=str, default="intensity",
-                help="Color Dimension. Can be any single LAS dimension, default is intensity. Using color mode rgb, elevation, and intensity overrides this field.")
-
         self.args = parser.parse_args()
      
     def setup(self):
     # Check mode
-        self.mode = self.args.mode
-        self.dim = self.args.dimension
+        self.ip = self.args.ip
+        self.port = self.args.port
         try:
-            client = MongoClient("localhost", 27017)
+            client = MongoClient(self.ip, self.port)
             db = client.lidar
             collection = db.zona            
             self.inFile = self.args.in_file
@@ -63,7 +60,7 @@ class loadDB():
                 inFile = laspy.file.File(self.inFile[i], mode="r")
                 print("Reading: " + inFile.filename)                
                 longitud = len(inFile.points)                
-                printProgress(0, longitud-1, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
+                printProgress(0, longitud - 1, prefix='Progreso:', suffix='Completo', barLength=50)
                 self.header = copy(inFile.header)
                 self.vlrs = inFile.header.vlrs
                 X = inFile.X
@@ -122,18 +119,18 @@ class loadDB():
                     documents.append(punto)
                     if len(documents) > 999 :
                         collection.insert_many(documents)
-                        printProgress(p, longitud-1, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
+                        printProgress(p, longitud - 1, prefix='Progreso:', suffix='Completo', barLength=50)
                         documents = []                    
                 if len(documents) > 0 :
                     collection.insert_many(documents)
-                    printProgress(p, longitud-1, prefix = 'Progreso:', suffix = 'Completo', barLength = 50)
+                    printProgress(p, longitud - 1, prefix='Progreso:', suffix='Completo', barLength=50)
                     documents = []
             final = datetime.datetime.now()
             total = final - inicio
             print ("Final de carga de datos = %s" % final)
             print ("Tiempo empleado = %s" % total)                   
         except Exception, error:
-            print("Error while reading file:")
+            print("\nError while reading file:")
             print(error)
             quit()
         

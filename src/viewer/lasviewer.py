@@ -48,7 +48,7 @@ class lasview():
             self.out = laspy.file.File("./output.las",mode= "w",header=self.header, vlrs = self.vlrs)
             self.out.points = self.points
         except Exception, error:
-            print("Error while reading file:")
+            print("\nError while reading file:")
             print(error)
             quit()
         
