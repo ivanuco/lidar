@@ -141,8 +141,8 @@ class loadDB():
         self.out.visualize(self.mode, self.dim)
 
 def main():
-    expl = loadDB()
-    # expl.view()
+    loadDB()
+    
 
 if __name__ == '__main__':
     main()
