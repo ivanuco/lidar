@@ -50,7 +50,7 @@ class lasview():
         except Exception, error:
             print("\nError while reading file:")
             print(error)
-            quit()
+            #quit()
         
     def view(self):
         self.out.visualize(self.mode, self.dim)
