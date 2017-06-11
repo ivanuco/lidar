@@ -32,7 +32,10 @@ ChangesEnvironment=true
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Files]
-Source: "C:\LiClipse Workspace\lidar\dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\LiClipse Workspace\lidar\dist\lasviewer.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\LiClipse Workspace\lidar\dist\laszip.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\LiClipse Workspace\lidar\dist\laszip_README.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\LiClipse Workspace\lidar\dist\loadDB.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
