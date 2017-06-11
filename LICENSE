@@ -163,3 +163,71 @@ whether future versions of the GNU Lesser General Public License shall
 apply, that proxy's public statement of acceptance of any version is
 permanent authorization for you to choose that version for the
 Library.
+
+****************************************************************
+
+  laszip:
+
+  Compresses and uncompresses LIDAR data stored in binary LAS
+  format (1.0 - 1.3) in a completely lossless manner to the
+  compressed LAZ format.
+
+  This tool comes with an LGPL license. The LASzip compression
+  source code is embedded inside LASlib, the LGPL-licensed API
+  that is used by all LAStools. The source code is also available
+  at http://laszip.org packaged for integration into libLAS.
+
+  The laszip compressor also includes full waveform compression,
+  namely the WPD part of LAS 1.3 files. Compress/decompress the
+  WPD part to and from a WPZ file via '-waveforms'. This makes
+  only sense for point types 4 and 5. It is expected that the
+  waveforms are sequential in the file. The waveform compressor
+  is not fully supported yet.
+
+  For updates check the website or join the LAStools mailing list.
+
+  http://laszip.org/
+  http://lastools.org/
+  http://groups.google.com/group/lastools/
+  http://twitter.com/lastools/
+  http://facebook.com/lastools/
+  http://linkedin.com/groups?gid=4408378
+
+  Martin @lastools
+
+****************************************************************
+
+laspy License
+==============================================================================
+Copyright (c) 2012, Grant Brown, grant.brown73 at gmail.com
+Copyright (c) 2012, Howard Butler, hobu.inc at gmail.com
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+
+#-----------------------------------------------------------------------------
+# Copyright (c) 2005-20l5, PyInstaller Development Team.
+#
+# Distributed under the terms of the GNU General Public License with exception
+# for distributing bootloader.
+#-----------------------------------------------------------------------------
